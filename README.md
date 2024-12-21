@@ -75,7 +75,7 @@ The library intelligently combines rates from both sources, prioritizing CBR for
 
 ## Contributing
 
-We welcome contributions to improve this library. Please submit issues or pull requests via our [GitHub repository](https://github.com/unrealos/currency-converter-free).
+We welcome contributions to improve this library. Please submit issues or pull requests via our [GitHub repository](https://github.com/markolofsen/currency-converter-free).
 
 ## License
 
