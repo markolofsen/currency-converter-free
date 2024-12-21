@@ -1,3 +1,4 @@
+
 # Currency Converter Free
 
 Currency Converter Free is a Python library designed to fetch and combine exchange rates from two trusted sources: the Central Bank of Russia (CBR) and the European Central Bank (ECB). The library provides an easy-to-use interface for currency conversion and supports caching mechanisms for optimal performance.
@@ -6,7 +7,7 @@ Currency Converter Free is a Python library designed to fetch and combine exchan
 
 - **Multiple Data Sources**: Fetch exchange rates from both the CBR and ECB, ensuring comprehensive coverage of currencies.
 - **Caching**: Supports both in-memory and persistent disk caching for efficient performance.
-- **Automatic Base Currency Handling**: Handles base currency differences between CBR (RUB) and ECB (EUR) transparently.
+- **Automatic Base Currency Handling**: Transparently handles base currency differences between CBR (RUB) and ECB (EUR).
 - **Easy Conversion**: Convert between any two supported currencies with a single function call.
 - **Extensible**: Easily adaptable for additional data sources or custom fetchers.
 
@@ -84,4 +85,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## About Unrealos.com
 
 Currency Converter Free is developed and maintained by [Unrealos.com](https://unrealos.com), a company specializing in SaaS, PaaS, and web-service solutions. For inquiries, please contact us at [m@unrealos.com](mailto:m@unrealos.com).
-
