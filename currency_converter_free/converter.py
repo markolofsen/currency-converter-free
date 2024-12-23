@@ -117,6 +117,7 @@ class CurrencyConverter:
     def convert(self, amount, from_cur, to_cur, source=None):
         """
         Convert an amount between currencies using specified or default source rates.
+        Handles intermediate conversion through the base currency if necessary.
         :param amount: The amount to convert.
         :param from_cur: The source currency code.
         :param to_cur: The target currency code.
@@ -124,19 +125,30 @@ class CurrencyConverter:
         :return: The converted amount or None if conversion is not possible.
         """
         rates = self.get_combined_rates(source)
+        base_currency = "RUB" if source == "CBR" else "EUR"  # Determine the base currency of the source
 
         if from_cur == to_cur:
             return amount
 
-        if from_cur in rates and to_cur in rates:
-            if from_cur == "RUB":
-                return amount / rates[to_cur]
-            if to_cur == "RUB":
-                return amount * rates[from_cur]
-            return (amount * rates[from_cur]) / rates[to_cur]
+        if from_cur not in rates or to_cur not in rates:
+            logging.warning(f"Conversion not possible: {from_cur} to {to_cur}. Rates missing.")
+            return None
 
-        logging.warning(f"Conversion not possible: {from_cur} to {to_cur}.")
-        return None
+        # Direct conversion if both currencies are related to the base currency
+        if from_cur == base_currency:
+            return amount / rates[to_cur]
+        elif to_cur == base_currency:
+            return amount * rates[from_cur]
+
+        # Indirect conversion through the base currency
+        try:
+            amount_in_base = amount * rates[from_cur]  # Convert to base currency
+            converted_amount = amount_in_base / rates[to_cur]  # Convert from base currency to target
+            return converted_amount
+        except KeyError:
+            logging.warning(f"Conversion not possible: {from_cur} to {to_cur}. KeyError in rates.")
+            return None
+
 
     def available_currencies(self, source=None):
         """

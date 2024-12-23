@@ -1,37 +1,40 @@
 
 # Currency Converter Free
 
-Currency Converter Free is a Python library designed to fetch and combine exchange rates from two trusted sources: the Central Bank of Russia (CBR) and the European Central Bank (ECB). The library provides an easy-to-use interface for currency conversion and employs disk-based caching mechanisms for optimal performance.
+**Currency Converter Free** is a Python library designed for seamless and efficient currency conversion, leveraging exchange rates from two trusted sources: the Central Bank of Russia (CBR) and the European Central Bank (ECB). With its robust caching and flexibility, this library is ideal for financial applications requiring reliable currency data.
 
 ## Key Features
 
-- **Multiple Data Sources**: Fetch exchange rates from both the CBR and ECB, ensuring comprehensive coverage of currencies.
-- **Disk-Based Caching**: Utilizes persistent disk caching to store exchange rates, reducing unnecessary API calls and enhancing performance.
-- **Automatic Base Currency Handling**: Transparently manages base currency differences between CBR (RUB) and ECB (EUR).
-- **Easy Conversion**: Convert between any two supported currencies with a single function call.
-- **Extensible**: Easily adaptable for additional data sources or custom fetchers.
+- **Multiple Data Sources**: Fetch exchange rates from CBR, ECB, or combine both for comprehensive currency coverage.
+- **Disk-Based Caching**: Persistent caching reduces API calls and boosts performance.
+- **Automatic Base Currency Management**: Transparently handles base currency differences (RUB for CBR and EUR for ECB).
+- **Flexible Conversion**: Convert between any two supported currencies with ease.
+- **Customizable**: Easily configurable to adjust caching behavior, data sources, or apply currency-specific correction factors.
+- **Optimized for Performance**: Uses efficient caching and data handling techniques.
+
+---
 
 ## Installation
 
-Install the library using pip:
+Install the library via `pip`:
 
 ```bash
 pip install currency-converter-free
 ```
 
-## Requirements
+### Requirements
 
 - Python 3.7+
 - [Requests](https://pypi.org/project/requests/)
 - [DiskCache](https://pypi.org/project/diskcache/)
 
-## Installation of Dependencies
-
-If not using `pip` to install `currency-converter-free`, ensure all dependencies are installed:
+If the library is installed manually, ensure dependencies are met:
 
 ```bash
 pip install requests diskcache
 ```
+
+---
 
 ## Usage
 
@@ -40,117 +43,129 @@ pip install requests diskcache
 ```python
 from currency_converter_free import CurrencyConverter
 
-# Initialize the converter with default settings (both CBR and ECB sources)
+# Initialize the converter
 converter = CurrencyConverter()
 
 # Convert 100 USD to EUR
-amount_in_eur = converter.convert(100, 'USD', 'EUR')
-print(f"100 USD = {amount_in_eur:.2f} EUR")
+usd_to_eur = converter.convert(100, 'USD', 'EUR')
+print(f"100 USD = {usd_to_eur:.2f} EUR")
 
 # Convert 100 RUB to USD
-amount_in_usd = converter.convert(100, 'RUB', 'USD')
-print(f"100 RUB = {amount_in_usd:.2f} USD")
+rub_to_usd = converter.convert(100, 'RUB', 'USD')
+print(f"100 RUB = {rub_to_usd:.2f} USD")
 
-# List all available currencies
-available_currencies = converter.available_currencies()
-print("Available currencies:", available_currencies)
+# List available currencies
+currencies = converter.available_currencies()
+print("Supported currencies:", currencies)
 ```
 
-### Advanced Options
+### Advanced Example
 
-#### Specifying Data Source
+#### Specify Data Source
 
-The `source` parameter allows you to choose the data source for fetching exchange rates. You can specify `"CBR"`, `"ECB"`, or `"BOTH"` to use both sources simultaneously.
+Choose between CBR, ECB, or both sources for exchange rates:
 
 ```python
 from currency_converter_free import CurrencyConverter
 
-# Initialize the converter to use only CBR rates
+# Use CBR rates only
 converter_cbr = CurrencyConverter(source="CBR")
 
-# Initialize the converter to use only ECB rates
+# Use ECB rates only
 converter_ecb = CurrencyConverter(source="ECB")
 
-# Initialize the converter to use both CBR and ECB rates
-converter_both = CurrencyConverter(source="BOTH")
+# Use both CBR and ECB rates
+converter_combined = CurrencyConverter(source="BOTH")
 ```
 
-**Parameters:**
+#### Customize Cache Directory
 
-- `source` (str): The source for exchange rates. Accepted values are:
-  - `"CBR"`: Use only the Central Bank of Russia rates.
-  - `"ECB"`: Use only the European Central Bank rates.
-  - `"BOTH"`: Combine rates from both CBR and ECB for comprehensive coverage.
-  
-**Default:** `"BOTH"`
-
-#### Customizing Cache Directory
-
-Specify a custom directory for storing cached exchange rates. This is useful for persisting cache across different environments or systems.
+To persist cache in a specific location:
 
 ```python
 from currency_converter_free import CurrencyConverter
 
-# Initialize the converter with a custom cache directory
-converter = CurrencyConverter(cache_dir="/path/to/your/cache_directory")
+# Specify a custom cache directory
+converter = CurrencyConverter(cache_dir="/custom/cache/directory")
 ```
 
-**Parameters:**
-
-- `cache_dir` (str): The directory path where cached exchange rates will be stored.
-
-**Default:** `"/tmp/rates_cache"`
+---
 
 ## Supported Sources
 
-- **Central Bank of Russia (CBR)**: Provides exchange rates with the Russian Ruble (RUB) as the base currency.
-- **European Central Bank (ECB)**: Offers exchange rates with the Euro (EUR) as the base currency.
+- **CBR (Central Bank of Russia)**: Provides rates with RUB as the base currency.
+- **ECB (European Central Bank)**: Offers rates with EUR as the base currency.
 
-The library intelligently combines rates from both sources, prioritizing CBR for RUB-based conversions and ECB for EUR-based conversions when using the `"BOTH"` option.
+When using the `"BOTH"` source, the library intelligently combines rates from CBR and ECB, prioritizing accuracy for RUB-based and EUR-based conversions.
+
+---
 
 ## API Reference
 
-### `CurrencyConverter` Class
+### `CurrencyConverter`
 
-#### `__init__(self, source="BOTH", cache_dir="/tmp/rates_cache")`
+#### Initialization
 
-Initialize the CurrencyConverter with default source and disk-based caching.
-
-- **Parameters:**
-  - `source` (str): The default source for rates. Accepted values are `"CBR"`, `"ECB"`, or `"BOTH"`. Defaults to `"BOTH"`.
-  - `cache_dir` (str): Directory for persistent cache. Defaults to `"/tmp/rates_cache"`.
-
-#### `convert(self, amount, from_cur, to_cur, source=None)`
-
-Convert an amount between currencies using specified or default source rates.
+```python
+CurrencyConverter(source="BOTH", cache_dir="/tmp/rates_cache")
+```
 
 - **Parameters:**
-  - `amount` (float): The amount to convert.
-  - `from_cur` (str): The source currency code.
-  - `to_cur` (str): The target currency code.
-  - `source` (str, optional): The source to use (`"CBR"`, `"ECB"`, or `"BOTH"`). Defaults to the initialized source.
+  - `source` (str): Selects the data source (`"CBR"`, `"ECB"`, or `"BOTH"`). Default is `"BOTH"`.
+  - `cache_dir` (str): Directory for persistent caching. Default is `"/tmp/rates_cache"`.
 
-- **Returns:**
-  - `float` or `None`: The converted amount or `None` if conversion is not possible.
+#### Methods
 
-#### `available_currencies(self, source=None)`
+- **`convert(amount, from_cur, to_cur, source=None)`**
+  - Converts an amount from one currency to another.
+  - **Parameters:**
+    - `amount` (float): The amount to convert.
+    - `from_cur` (str): Source currency code.
+    - `to_cur` (str): Target currency code.
+    - `source` (str, optional): Specify source (`"CBR"`, `"ECB"`, or `"BOTH"`). Defaults to initialized source.
+  - **Returns:** `float` (converted amount) or `None` if conversion is unavailable.
 
-List all available currencies for conversion.
+- **`available_currencies(source=None)`**
+  - Lists all supported currencies.
+  - **Parameters:**
+    - `source` (str, optional): Specify source (`"CBR"`, `"ECB"`, or `"BOTH"`). Defaults to initialized source.
+  - **Returns:** `List[str]` (sorted list of supported currencies).
 
-- **Parameters:**
-  - `source` (str, optional): The source to use (`"CBR"`, `"ECB"`, or `"BOTH"`). Defaults to the initialized source.
+---
 
-- **Returns:**
-  - `List[str]`: A sorted list of available currency codes.
+## Development & Contributions
 
-## Contributing
+We welcome contributions to enhance this library! You can:
 
-We welcome contributions to improve this library. Please submit issues or pull requests via our [GitHub repository](https://github.com/markolofsen/currency-converter-free).
+1. Report issues or suggest features via [GitHub Issues](https://github.com/markolofsen/currency-converter-free).
+2. Submit pull requests for bug fixes or new features.
+
+### Development Workflow
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/markolofsen/currency-converter-free.git
+   cd currency-converter-free
+   ```
+
+2. Install development dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Run tests to verify changes:
+   ```bash
+   pytest
+   ```
+
+---
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. For more details, refer to the [LICENSE](LICENSE) file.
+
+---
 
 ## About Unrealos.com
 
-Currency Converter Free is developed and maintained by [Unrealos.com](https://unrealos.com), a company specializing in SaaS, PaaS, and web-service solutions. For inquiries, please contact us at [m@unrealos.com](mailto:m@unrealos.com).
+Currency Converter Free is developed and maintained by [Unrealos.com](https://unrealos.com), a pioneer in SaaS, PaaS, and web-service solutions. For inquiries, contact us at [m@unrealos.com](mailto:m@unrealos.com).
